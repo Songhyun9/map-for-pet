@@ -4,8 +4,8 @@ const axiosInstance = axios.create({
     baseURL: 'http://apis.data.go.kr/B551011/KorService',
 })
 
-const baseTourParams = {
-    serviceKey: process.env.NEXT_PUBLIC_DECODING_KEY,
+const baseInstance = {
+    serviceKey: process.env.NEXT_PUBLIC_TOUR_DECODING_KEY,
     MobileOS: 'ETC',
     MobileApp: 'AppTest',
     _type: 'json',
@@ -17,13 +17,13 @@ interface IFetchApiProps {
     params?: object
 }
 
-export const fetchApi = async ({ method, url, params }: IFetchApiProps) => {
+export const fetchTourApi = async ({ method, url, params }: IFetchApiProps) => {
     try {
         if (method === 'get') {
             return await axiosInstance
                 .get(url, {
                     params: {
-                        ...baseTourParams,
+                        ...baseInstance,
                         ...params,
                     },
                 })
@@ -31,7 +31,7 @@ export const fetchApi = async ({ method, url, params }: IFetchApiProps) => {
         } else {
             return await axiosInstance({
                 method: method,
-                url: `${url}?serviceKey=${process.env.NEXT_PUBLIC_DECODING_KEY}&MobileOS=ETC&MobileApp=AppTest&_type=json`,
+                url: `${url}?serviceKey=${process.env.NEXT_PUBLIC_TOUR_DECODING_KEY}&MobileOS=ETC&MobileApp=AppTest&_type=json`,
                 data: params,
             }).then((res) => res.data)
         }

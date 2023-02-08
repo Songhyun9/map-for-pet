@@ -10,7 +10,7 @@ export async function getStaticProps() {
 
     await queryClient.prefetchQuery({
         queryKey: ['stay'],
-        queryFn: () => api.getStay(),
+        queryFn: () => api.getHospital(),
     })
 
     return {
@@ -23,7 +23,7 @@ export async function getStaticProps() {
 export default function Home() {
     const { data, error } = useQuery({
         queryKey: ['stay'],
-        queryFn: () => api.getStay(),
+        queryFn: () => api.getHospital(),
     })
     console.log(data)
     console.log(error)

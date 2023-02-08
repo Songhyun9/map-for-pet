@@ -1,8 +1,9 @@
-import { fetchApi } from './fetch'
+import { fetchGgApi } from './gg'
+import { fetchTourApi } from './tour'
 
 const api = {
     getAreaCode() {
-        return fetchApi({
+        return fetchTourApi({
             method: 'get',
             url: '/areaCode',
             params: {
@@ -11,7 +12,7 @@ const api = {
         })
     },
     getFestival() {
-        return fetchApi({
+        return fetchTourApi({
             method: 'get',
             url: '/searchFestival',
             params: {
@@ -20,15 +21,15 @@ const api = {
         })
     },
     getStay() {
-        return fetchApi({
+        return fetchTourApi({
             method: 'get',
             url: '/searchStay',
         })
     },
-    getFet() {
-        return fetchApi({
+    getHospital() {
+        return fetchGgApi({
             method: 'get',
-            url: '/detailPetTour',
+            url: '/Animalhosptl',
         })
     },
 }
