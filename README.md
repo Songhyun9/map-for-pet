@@ -1,11 +1,18 @@
 # mapforpet
 
-mapforpet
+pet 관련 지도
 
-경기도 동물병원 검색
-전체시군 / 키워드
+## 기능
 
-지도
-잡고 이동하기
-확대
-마커 클릭시 정보창 띄우기
+-   검색
+-   지도표시
+-   즐겨찾기
+-   Auth
+
+## Tech Stack
+
+**Client:** React, Typescript, Recoil, TailwindCSS, React-Query
+
+## License
+
+[MIT](https://choosealicense.com/licenses/mit/)
