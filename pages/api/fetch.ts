@@ -5,7 +5,7 @@ const axiosInstance = axios.create({
 })
 
 const baseTourParams = {
-    serviceKey: process.env.REACT_APP_ENCODING_KEY,
+    serviceKey: process.env.NEXT_PUBLIC_DECODING_KEY,
     MobileOS: 'ETC',
     MobileApp: 'AppTest',
     _type: 'json',
@@ -31,7 +31,7 @@ export const fetchApi = async ({ method, url, params }: IFetchApiProps) => {
         } else {
             return await axiosInstance({
                 method: method,
-                url: `${url}?serviceKey=${process.env.REACT_APP_TOUR_ENCODE_KEY}&MobileOS=ETC&MobileApp=AppTest&_type=json`,
+                url: `${url}?serviceKey=${process.env.NEXT_PUBLIC_DECODING_KEY}&MobileOS=ETC&MobileApp=AppTest&_type=json`,
                 data: params,
             }).then((res) => res.data)
         }
