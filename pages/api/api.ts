@@ -32,6 +32,12 @@ const api = {
             url: '/Animalhosptl',
         })
     },
+    getCityList() {
+        return fetchGgApi({
+            method: 'get',
+            url: '/Bysigunbasis',
+        })
+    },
 }
 
 export default api

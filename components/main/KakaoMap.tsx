@@ -36,7 +36,7 @@ const KakaoMap: FC<MapProps> = ({ longitude, latitude }) => {
         return () => mapScript.removeEventListener('load', onLoadKakaoMap)
     }, [latitude, longitude])
 
-    return <div id="map" className="h-96 w-full"></div>
+    return <div id="map" className="h-[calc(100vh_-_158px)] w-full"></div>
 }
 
 export default KakaoMap

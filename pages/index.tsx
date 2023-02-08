@@ -9,8 +9,13 @@ export async function getStaticProps() {
     const queryClient = new QueryClient()
 
     await queryClient.prefetchQuery({
-        queryKey: ['stay'],
+        queryKey: ['hospital'],
         queryFn: () => api.getHospital(),
+    })
+
+    await queryClient.prefetchQuery({
+        queryKey: ['cityList'],
+        queryFn: () => api.getCityList(),
     })
 
     return {
@@ -22,12 +27,19 @@ export async function getStaticProps() {
 
 export default function Home() {
     const { data, error } = useQuery({
-        queryKey: ['stay'],
+        queryKey: ['hospital'],
         queryFn: () => api.getHospital(),
         select: (d) => d.Animalhosptl,
     })
-    console.log(data)
-    console.log(error)
+
+    const { data: cities, error: citiesError } = useQuery({
+        queryKey: ['cityList'],
+        queryFn: () => api.getCityList(),
+        select: (d) => d.Bysigunbasis,
+    })
+    console.log(cities)
+    console.log(citiesError)
+
     return (
         <div className="min-w-screen h-full min-h-screen w-full overflow-hidden">
             <Header />
@@ -36,7 +48,11 @@ export default function Home() {
                     <div className="form-control w-full flex-row gap-2">
                         <select className="select-bordered select max-w-xs">
                             <option>전체</option>
-                            <option selected>병원</option>
+                            <option>병원</option>
+                            <option>etc</option>
+                        </select>
+                        <select className="select-bordered select max-w-xs">
+                            <option>성남시</option>
                             <option>etc</option>
                         </select>
                         <div className="input-group w-full">
@@ -50,7 +66,7 @@ export default function Home() {
                             </button>
                         </div>
                     </div>
-                    <KakaoMap longitude={126.570667} latitude={33.450701} />
+                    <KakaoMap longitude={127.1325708} latitude={37.440861} />
                 </div>
             </div>
             <Footer />
