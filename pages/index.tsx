@@ -35,8 +35,9 @@ export default function Home() {
     const { data: cities, error: citiesError } = useQuery({
         queryKey: ['cityList'],
         queryFn: () => api.getCityList(),
-        select: (d) => d.Bysigunbasis,
+        select: (d) => d.Bysigunbasis[1].row,
     })
+
     console.log(cities)
     console.log(citiesError)
 
@@ -52,8 +53,9 @@ export default function Home() {
                             <option>etc</option>
                         </select>
                         <select className="select-bordered select max-w-xs">
-                            <option>성남시</option>
-                            <option>etc</option>
+                            {cities.map((city: any) => (
+                                <option>{city.SIGUN_NM}</option>
+                            ))}
                         </select>
                         <div className="input-group w-full">
                             <input
