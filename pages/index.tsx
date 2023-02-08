@@ -24,6 +24,7 @@ export default function Home() {
     const { data, error } = useQuery({
         queryKey: ['stay'],
         queryFn: () => api.getHospital(),
+        select: (d) => d.Animalhosptl,
     })
     console.log(data)
     console.log(error)
@@ -32,7 +33,12 @@ export default function Home() {
             <Header />
             <div className="h-[calc(100vh_-_64px)] w-full bg-stone-100 p-1">
                 <div className="m-auto flex w-full max-w-md flex-col gap-4 pt-3">
-                    <div className="form-control w-full">
+                    <div className="form-control w-full flex-row gap-2">
+                        <select className="select-bordered select max-w-xs">
+                            <option>전체</option>
+                            <option selected>병원</option>
+                            <option>etc</option>
+                        </select>
                         <div className="input-group w-full">
                             <input
                                 type="text"
