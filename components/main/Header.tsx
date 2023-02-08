@@ -1,4 +1,4 @@
-
+import Paw from '@/icons/Paw'
 import { StarIcon, UserIcon } from '@heroicons/react/24/outline'
 
 const Header = () => {
@@ -6,8 +6,8 @@ const Header = () => {
         <>
             <div className="z-1000 navbar flex w-full justify-center bg-base-100 drop-shadow-xl">
                 <div className="flex w-full max-w-md justify-between">
-                    <div className="flex">
-                        <a className="text-xl normal-case">find</a>
+                    <div className="btn-ghost btn-circle avatar btn">
+                        <Paw />
                     </div>
                     <div className="flex">
                         <div className="btn-ghost btn-circle avatar btn">

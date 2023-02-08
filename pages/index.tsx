@@ -2,8 +2,31 @@ import Footer from '@/components/main/Footer'
 import Header from '@/components/main/Header'
 import KakaoMap from '@/components/main/KakaoMap'
 import { MagnifyingGlassIcon } from '@heroicons/react/24/outline'
+import { dehydrate, QueryClient, useQuery } from '@tanstack/react-query'
+import api from './api/api'
+
+export async function getStaticProps() {
+    const queryClient = new QueryClient()
+
+    await queryClient.prefetchQuery({
+        queryKey: ['stay'],
+        queryFn: () => api.getStay(),
+    })
+
+    return {
+        props: {
+            dehydratedState: dehydrate(queryClient),
+        },
+    }
+}
 
 export default function Home() {
+    const { data, error } = useQuery({
+        queryKey: ['stay'],
+        queryFn: () => api.getStay(),
+    })
+    console.log(data)
+    console.log(error)
     return (
         <div className="min-w-screen h-full min-h-screen w-full overflow-hidden">
             <Header />
