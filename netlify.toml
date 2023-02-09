@@ -1,6 +1,6 @@
 [build]
   command = "yarn build"
-  publish = "build"
+  publish = ".next"
 
 [context.production.environment]
   NEXT_PUBLIC_KAKAOMAP_APPKEY = "f3015318b0012cdeb9ec691afc4552d9"
