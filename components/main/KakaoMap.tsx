@@ -71,9 +71,9 @@ const KakaoMap: FC<MapProps> = ({ data }) => {
 
                     const content = document.createElement('div')
                     content.innerHTML = `
-                    <P>${v.name}</P>
-                    <p>${v.address}</p>
-                    <p>${v.phone}</p>
+                    <P class="break-words whitespace-pre-line font-bold">${v.name}</P>
+                    <p class="break-words whitespace-pre-line">${v.address}</p>
+                    <p class="break-words whitespace-pre-line">${v.phone}</p>
                     `
 
                     btnWrapper.appendChild(btn)
@@ -85,7 +85,7 @@ const KakaoMap: FC<MapProps> = ({ data }) => {
                         clickable: true,
                         position: new window.kakao.maps.LatLng(v.lat, v.lng),
                         xAnchor: 0.5,
-                        yAnchor: 1.5,
+                        yAnchor: 1,
                         zIndex: 3,
                     })
 
