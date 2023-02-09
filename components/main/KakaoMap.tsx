@@ -53,16 +53,43 @@ const KakaoMap: FC<MapProps> = ({ data }) => {
                         // image: markerImage,
                     })
 
-                    // 마커를 클릭했을 때 마커 위에 표시할 인포윈도우를 생성합니다
-                    const iwContent =
-                        '<div style="padding:5px;">Hello World!</div>' // 인포윈도우에 표출될 내용으로 HTML 문자열이나 document element가 가능합니다
-                    const iwRemoveable = true // removeable 속성을 ture 로 설정하면 인포윈도우를 닫을 수 있는 x버튼이 표시됩니다
+                    const cardWrapper = document.createElement('div')
+                    cardWrapper.className = 'card w-96 bg-base-100 shadow-xl'
 
-                    // 인포윈도우를 생성합니다
-                    const infowindow = new window.kakao.maps.InfoWindow({
-                        content: iwContent,
-                        removable: iwRemoveable,
+                    const cardBody = document.createElement('div')
+                    cardBody.className = 'card-body'
+
+                    const btnWrapper = document.createElement('div')
+                    btnWrapper.className = 'card-actions justify-end'
+
+                    const btn = document.createElement('button')
+                    btn.className = 'btn btn-square btn-sm'
+                    btn.onclick = function closeOverlay() {
+                        customOverlay.setMap(null)
+                    }
+                    btn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>`
+
+                    const content = document.createElement('div')
+                    content.innerHTML = `
+                    <P>${v.name}</P>
+                    <p>${v.address}</p>
+                    <p>${v.phone}</p>
+                    `
+
+                    btnWrapper.appendChild(btn)
+                    cardBody.appendChild(btnWrapper)
+                    cardBody.appendChild(content)
+                    cardWrapper.appendChild(cardBody)
+
+                    var customOverlay = new window.kakao.maps.CustomOverlay({
+                        clickable: true,
+                        position: new window.kakao.maps.LatLng(v.lat, v.lng),
+                        xAnchor: 0.5,
+                        yAnchor: 1.5,
+                        zIndex: 3,
                     })
+
+                    customOverlay.setContent(cardWrapper)
 
                     // 마커에 클릭이벤트를 등록합니다
                     window.kakao.maps.event.addListener(
@@ -70,7 +97,7 @@ const KakaoMap: FC<MapProps> = ({ data }) => {
                         'click',
                         function () {
                             // 마커 위에 인포윈도우를 표시합니다
-                            infowindow.open(map, marker)
+                            customOverlay.setMap(map)
                         }
                     )
                 })
