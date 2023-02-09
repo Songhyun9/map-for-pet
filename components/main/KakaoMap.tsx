@@ -4,11 +4,17 @@ import hospitalImg from '@/public/building-hospital.svg'
 import pin from '@/public/map-pin-filled.svg'
 
 interface MapProps {
-    latitude: number
-    longitude: number
+    data: {
+        name: string
+        phone: string
+        address: string
+        zip: string
+        lat: string
+        lng: string
+    }[]
 }
 
-const KakaoMap: FC<MapProps> = ({ longitude, latitude }) => {
+const KakaoMap: FC<MapProps> = ({ data }) => {
     useEffect(() => {
         const mapScript = document.createElement('script')
 
@@ -21,7 +27,10 @@ const KakaoMap: FC<MapProps> = ({ longitude, latitude }) => {
             window.kakao.maps.load(() => {
                 const container = document.getElementById('map')
                 const options = {
-                    center: new window.kakao.maps.LatLng(latitude, longitude),
+                    center: new window.kakao.maps.LatLng(
+                        data[0].lat,
+                        data[0].lng
+                    ),
                 }
                 const map = new window.kakao.maps.Map(container, options)
                 const imageSrc = hospitalImg.src // 마커이미지의 주소입니다
@@ -36,21 +45,19 @@ const KakaoMap: FC<MapProps> = ({ longitude, latitude }) => {
                     imageOption
                 )
 
-                const markerPosition = new window.kakao.maps.LatLng(
-                    latitude,
-                    longitude
-                )
-                const marker = new window.kakao.maps.Marker({
-                    position: markerPosition,
-                    // image: markerImage,
+                data.forEach((v) => {
+                    const marker = new window.kakao.maps.Marker({
+                        map: map,
+                        position: new window.kakao.maps.LatLng(v.lat, v.lng),
+                        // image: markerImage,
+                    })
                 })
-                marker.setMap(map)
             })
         }
         mapScript.addEventListener('load', onLoadKakaoMap)
 
         return () => mapScript.removeEventListener('load', onLoadKakaoMap)
-    }, [latitude, longitude])
+    }, [data])
 
     return <div id="map" className="h-[calc(100vh_-_158px)] w-full"></div>
 }

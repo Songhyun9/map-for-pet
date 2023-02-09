@@ -3,14 +3,43 @@ import Header from '@/components/main/Header'
 import KakaoMap from '@/components/main/KakaoMap'
 import { MagnifyingGlassIcon } from '@heroicons/react/24/outline'
 import { dehydrate, QueryClient, useQuery } from '@tanstack/react-query'
+import { useState } from 'react'
 import api from './api/api'
+
+interface IHospital {
+    BIZCOND_DIV_NM_INFO: any
+    BIZPLC_NM: string
+    BSN_STATE_DIV_CD: string
+    BSN_STATE_NM: string
+    CLSBIZ_DE: any
+    LICENSG_CANCL_DE: any
+    LICENSG_DE: string
+    LOCPLC_AR_INFO: string
+    LOCPLC_FACLT_TELNO: string
+    LOCPLC_ZIP_CD: any
+    REFINE_LOTNO_ADDR: string
+    REFINE_ROADNM_ADDR: string
+    REFINE_WGS84_LAT: string
+    REFINE_WGS84_LOGT: string
+    REFINE_ZIP_CD: string
+    RIGHT_MAINBD_IDNTFY_NO: string
+    ROADNM_ZIP_CD: string
+    SFRMPROD_PROCSBIZ_DIV_NM: any
+    SIGUN_CD: string
+    SIGUN_NM: string
+    STOCKRS_DUTY_DIV_NM: string
+    STOCKRS_IDNTFY_NO: any
+    TOT_EMPLY_CNT: any
+    X_CRDNT_VL: string
+    Y_CRDNT_VL: string
+}
 
 export async function getStaticProps() {
     const queryClient = new QueryClient()
 
     await queryClient.prefetchQuery({
         queryKey: ['hospital'],
-        queryFn: () => api.getHospital(),
+        queryFn: () => api.getHospital(1, 100, ''),
     })
 
     await queryClient.prefetchQuery({
@@ -26,11 +55,7 @@ export async function getStaticProps() {
 }
 
 export default function Home() {
-    const { data, error } = useQuery({
-        queryKey: ['hospital'],
-        queryFn: () => api.getHospital(),
-        select: (d) => d.Animalhosptl,
-    })
+    const [cityCD, setCItyCD] = useState<string>('41110')
 
     const { data: cities, error: citiesError } = useQuery({
         queryKey: ['cityList'],
@@ -38,8 +63,28 @@ export default function Home() {
         select: (d) => d.Bysigunbasis[1].row,
     })
 
-    console.log(cities)
-    console.log(citiesError)
+    const selectChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+        setCItyCD(event.target.value)
+    }
+
+    const { data, error } = useQuery({
+        queryKey: ['hospital', cityCD],
+        queryFn: () => api.getHospital(1, 100, cityCD),
+        select: (d) =>
+            (d.Animalhosptl[1].row as IHospital[])
+                .filter((v) => v.BSN_STATE_DIV_CD === '0000')
+                .map((v2) => ({
+                    name: v2.BIZPLC_NM,
+                    phone: v2.LOCPLC_FACLT_TELNO,
+                    address: v2.REFINE_ROADNM_ADDR,
+                    zip: v2.ROADNM_ZIP_CD,
+                    lat: v2.REFINE_WGS84_LAT,
+                    lng: v2.REFINE_WGS84_LOGT,
+                })),
+    })
+
+    console.log(data)
+    console.log(error)
 
     return (
         <div className="min-w-screen h-full min-h-screen w-full overflow-hidden">
@@ -49,12 +94,21 @@ export default function Home() {
                     <div className="form-control w-full flex-row gap-2">
                         <select className="select-bordered select max-w-xs">
                             <option>전체</option>
-                            <option>병원</option>
+                            <option value={'hospital'}>병원</option>
                             <option>etc</option>
                         </select>
-                        <select className="select-bordered select max-w-xs">
-                            {cities.map((city: any) => (
-                                <option>{city.SIGUN_NM}</option>
+                        <select
+                            value={cityCD}
+                            onChange={selectChange}
+                            className="select-bordered select max-w-xs"
+                        >
+                            {cities?.map((city: any, index: number) => (
+                                <option
+                                    key={`${city.SIGUN_NM}_${index}`}
+                                    value={city.SIGUN_CD}
+                                >
+                                    {city.SIGUN_NM}
+                                </option>
                             ))}
                         </select>
                         <div className="input-group w-full">
@@ -68,7 +122,7 @@ export default function Home() {
                             </button>
                         </div>
                     </div>
-                    <KakaoMap longitude={127.1325708} latitude={37.440861} />
+                    {data && <KakaoMap data={data} />}
                 </div>
             </div>
             <Footer />
