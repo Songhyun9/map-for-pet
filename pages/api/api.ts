@@ -37,6 +37,17 @@ const api = {
             },
         })
     },
+    getPhamacy(pIndex: number, pSize: number, cityCD: string) {
+        return fetchGgApi({
+            method: 'get',
+            url: 'AnimalPharmacy',
+            params: {
+                pIndex: pIndex,
+                pSize: pSize,
+                SIGUN_CD: cityCD,
+            },
+        })
+    },
     getCityList() {
         return fetchGgApi({
             method: 'get',

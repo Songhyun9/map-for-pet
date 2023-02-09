@@ -34,12 +34,44 @@ interface IHospital {
     Y_CRDNT_VL: string
 }
 
+interface IPharmacy {
+    BIZCOND_DIV_NM_INFO: any
+    BIZPLC_NM: string
+    BSN_STATE_DIV_CD: string
+    BSN_STATE_NM: string
+    CLSBIZ_DE: string
+    LICENSG_CANCL_DE: any
+    LICENSG_DE: string
+    LOCPLC_AR_INFO: any
+    LOCPLC_FACLT_TELNO: string
+    REFINE_LOTNO_ADDR: string
+    REFINE_ROADNM_ADDR: string
+    REFINE_WGS84_LAT: string
+    REFINE_WGS84_LOGT: string
+    REFINE_ZIP_CD: string
+    RIGHT_MAINBD_IDNTFY_NO: string
+    ROADNM_ZIP_CD: string
+    SFRMPROD_PROCSBIZ_DIV_NM: any
+    SIGUN_CD: string
+    SIGUN_NM: string
+    STOCKRS_DUTY_DIV_NM: string
+    STOCKRS_IDNTFY_NO: any
+    TOT_EMPLY_CNT: any
+    X_CRDNT_VL: string
+    Y_CRDNT_VL: string
+}
+
 export async function getStaticProps() {
     const queryClient = new QueryClient()
 
     await queryClient.prefetchQuery({
         queryKey: ['hospital'],
         queryFn: () => api.getHospital(1, 100, ''),
+    })
+
+    await queryClient.prefetchQuery({
+        queryKey: ['pharmacy'],
+        queryFn: () => api.getPhamacy(1, 100, ''),
     })
 
     await queryClient.prefetchQuery({
@@ -67,7 +99,7 @@ export default function Home() {
         setCItyCD(event.target.value)
     }
 
-    const { data, error } = useQuery({
+    const { data: hospitals, error } = useQuery({
         queryKey: ['hospital', cityCD],
         queryFn: () => api.getHospital(1, 100, cityCD),
         select: (d) =>
@@ -83,8 +115,17 @@ export default function Home() {
                 })),
     })
 
-    console.log(data)
-    console.log(error)
+    const { data: pharmacies, error: pharmaciesError } = useQuery({
+        queryKey: ['pharmacy', cityCD],
+        queryFn: () => api.getPhamacy(1, 100, cityCD),
+        select: (d) =>
+            (d.AnimalPharmacy[1].row as IPharmacy[]).filter(
+                (v) => v.BSN_STATE_DIV_CD === '0000'
+            ),
+    })
+
+    console.log(pharmacies)
+    console.log(pharmaciesError)
 
     return (
         <div className="min-w-screen h-full min-h-screen w-full overflow-hidden">
@@ -122,7 +163,7 @@ export default function Home() {
                             </button>
                         </div>
                     </div>
-                    {data && <KakaoMap data={data} />}
+                    {hospitals && <KakaoMap data={hospitals} />}
                 </div>
             </div>
             <Footer />
